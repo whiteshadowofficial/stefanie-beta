@@ -3,12 +3,12 @@
     "description": "Ajuser is the Modified Version of WhatsAsena, Made By @aju with Baileys.",
     "logo": "https://i.ibb.co/Y2mXdR5/ajuser.jpg",
     "keywords": ["whatsapp", "userbot", "julie", "WhatsAsena", "mwol", "bot", "ai"],
-    "repository": "https://github.com/aju001/Ajuser",
+    "repository": "https://github.com/Kaweeshachamodk/stefanie-beta",
     "website":   "https://github.com/aju001/Ajuser",
     "success_url": "https://github.com/aju001/Ajuser",
     "stack": "container",
     "env": {
-        "JULIE_SESSION": {
+        "STEFANIE_SESSION": {
             "description": "Type here yours Asena Session.",
             "required": true
         },
