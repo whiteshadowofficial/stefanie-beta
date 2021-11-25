@@ -1,2 +1,2 @@
 
-heroku.com/deploy?template=https://github.com/Kaweeshachamodk/stefanie-beta```
+heroku.com/deploy?template=https://github.com/Kaweeshachamodk/stefanie-beta´´´
