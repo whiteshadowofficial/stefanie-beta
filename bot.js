@@ -1,25 +1,17 @@
-/* Copyright (C) 2020 Yusuf Usta.
-
-Licensed under the  GPL-3.0 License;
-you may not use this file except in compliance with the License.
-
-WhatsAsena - Yusuf Usta
-*/
-
 const fs = require("fs");
 const path = require("path");
 const events = require("./events");
 const chalk = require('chalk');
 const config = require('./config');
 const {WAConnection, MessageOptions, MessageType, Mimetype, Presence} = require('@adiwajshing/baileys');
-const {Message, StringSession, Image, Video} = require('./julie/');
+const {Message, StringSession, Image, Video} = require('./npmBot/');
 const { DataTypes } = require('sequelize');
 const { getMessage } = require("./plugins/sql/greetings");
 const axios = require('axios');
 const got = require('got');
 
 // Sql
-const WhatsAsenaDB = config.DATABASE.define('WhatsAsena', {
+const npmDB = config.DATABASE.define('npm', {
     info: {
       type: DataTypes.STRING,
       allowNull: false
@@ -60,9 +52,9 @@ Array.prototype.remove = function() {
     return this;
 };
 
-async function whatsAsena () {
+async function Ravana () {
     await config.DATABASE.sync();
-    var StrSes_Db = await WhatsAsenaDB.findAll({
+    var StrSes_Db = await npmDB.findAll({
         where: {
           info: 'StringSession'
         }
@@ -70,8 +62,7 @@ async function whatsAsena () {
     
     
     const conn = new WAConnection();
-    const sourav = await axios('https://gist.githubusercontent.com/souravkl11/160a847d127e1fb38a4913a005dfe08f/raw/094f940e91a478de25de41f19b2a712bdff6e475/Version.json')
-    conn.version = sourav.data.kl11
+    conn.version = [2, 2140, 12];
     const Session = new StringSession();
 
     conn.logger.level = config.DEBUG ? 'debug' : 'warn';
@@ -86,32 +77,32 @@ async function whatsAsena () {
 
     conn.on ('credentials-updated', async () => {
         console.log(
-            chalk.blueBright.italic('✅ Login information updated!')
+            chalk.blueBright.italic('🤴 පිවිසුම් තොරතුරු යාවත්කාලීන කරන ලදි\n1️⃣ Login Information Updated ✅')
         );
 
         const authInfo = conn.base64EncodedAuthInfo();
         if (StrSes_Db.length < 1) {
-            await WhatsAsenaDB.create({ info: "StringSession", value: Session.createStringSession(authInfo) });
+            await npmDB.create({ info: "StringSession", value: Session.createStringSession(authInfo) });
         } else {
             await StrSes_Db[0].update({ value: Session.createStringSession(authInfo) });
         }
     })    
 
     conn.on('connecting', async () => {
-        console.log(`${chalk.green.bold('Whats')}${chalk.blue.bold('Asena')}
+        console.log(`${chalk.green.bold('SL')}${chalk.blue.bold('RAVANA')}
 ${chalk.white.bold('Version:')} ${chalk.red.bold(config.VERSION)}
 
-${chalk.blue.italic('ℹ️ Connecting to WhatsApp...')}`);
+${chalk.blue.italic('⭕ Ravana WhatsApp වෙත සම්බන්ධ වෙමින් </> කරුණාකර රැඳී සිටින්න ❕\n⭕ Ravana Connecting to WhatsApp</> Please Wait ❕\n\n')}`);
     });
     
 
     conn.on('open', async () => {
         console.log(
-            chalk.green.bold('✅ Login successful!')
+            chalk.green.bold('🤴 ප්‍රවේශ වීම සාර්‍ථකයි\n2️⃣ Login Successful ✅')
         );
 
         console.log(
-            chalk.blueBright.italic('⬇️ Installing external plugins...')
+            chalk.blueBright.italic('🤴 බාහිර ප්ලගීන ස්ථාපනය කිරීමින්\n3️⃣ Installing External Plugins ‍✅‍‍')
         );
 
         var plugins = await plugindb.PluginDB.findAll();
@@ -127,7 +118,7 @@ ${chalk.blue.italic('ℹ️ Connecting to WhatsApp...')}`);
         });
 
         console.log(
-            chalk.blueBright.italic('⬇️Installing plugins...')
+            chalk.blueBright.italic('🤴 ප්ලගීන ස්ථාපනය කිරීමින්\n4️⃣ Installing Plugins ✅')
         );
 
         fs.readdirSync('./plugins').forEach(plugin => {
@@ -137,111 +128,148 @@ ${chalk.blue.italic('ℹ️ Connecting to WhatsApp...')}`);
         });
 
         console.log(
-            chalk.green.bold('✅ Ajuser bot working aan😎!')
+            chalk.green.bold('🤴 ප්ලගීන install කරන ලදි\n6️⃣ Plugins Installed ✅ \n\n🤴 රාවණා බොට් දැන් වැඩකරනු ලැබේ\n💌 Ravana Bot Now Working 🪀‍\n📌 කරුණාකර ඔබේ whatsapp ගිනුම පරික්ෂා කරන්න\n📌 Please check your whatsapp account\n\n')
         );
-        await new Promise(r => setTimeout(r, 1100));
 
-        if (config.WORKTYPE == 'public') {
-            if (config.LANG == 'TR' || config.LANG == 'AZ') {
-
-                if (conn.user.jid === '@s.whatsapp.net') {
-
-                    await conn.sendMessage(conn.user.jid, '```🛡️ Blacklist Tespit Edildi!``` \n```Kullanıcı:``` \n```Sebep:``` ', MessageType.text)
-
-                    await new Promise(r => setTimeout(r, 1700));
-
-                    console.log('🛡️ Blacklist Detected 🛡️')
-
-                    await heroku.get(baseURI + '/formation').then(async (formation) => {
-                        forID = formation[0].id;
-                        await heroku.patch(baseURI + '/formation/' + forID, {
-                            body: {
-                                quantity: 0
-                            }
-                        });
-                    })
-                }
-                else {
-                    await conn.sendMessage(conn.user.jid, '*AJUSER BOT WORKING AYI😜*', MessageType.text);
-                }
-            }
-            else {
-
-                if (conn.user.jid === '@s.whatsapp.net') {
-
-                    await conn.sendMessage(conn.user.jid, '```🛡️ Blacklist Detected!``` \n```User:```  \n```Reason:``` ', MessageType.text)
-
-                    await new Promise(r => setTimeout(r, 1800));
-
-                    console.log('🛡️ Blacklist Detected 🛡️')
-                    await heroku.get(baseURI + '/formation').then(async (formation) => {
-                        forID = formation[0].id;
-                        await heroku.patch(baseURI + '/formation/' + forID, {
-                            body: {
-                                quantity: 0
-                            }
-                        });
-                    })
-                }
-                else {
-                    await conn.sendMessage(conn.user.jid, '*AJUSER BOT WORKING AYI😜*', MessageType.text);
-                }
-
-            }
-        }
-        else if (config.WORKTYPE == 'private') {
-            if (config.LANG == 'TR' || config.LANG == 'AZ') {
-
-                if (conn.user.jid === '@s.whatsapp.net') {
-
-                    await conn.sendMessage(conn.user.jid, '```🛡️ Blacklist Detected!``` \n ```Kullanıcı:``` \n```Sebep:``` ', MessageType.text)
-
-                    await new Promise(r => setTimeout(r, 1800));
-
-                    console.log('🛡️ Blacklist Detected 🛡️')
-                    await heroku.get(baseURI + '/formation').then(async (formation) => {
-                        forID = formation[0].id;
-                        await heroku.patch(baseURI + '/formation/' + forID, {
-                            body: {
-                                quantity: 0
-                            }
-                        });
-                    })
-                }
-                else {
-
-                await conn.sendMessage(conn.user.jid, '*Bot Started*', MessageType.text);
-                }
-            }
-            else {
-
-                if (conn.user.jid === '@s.whatsapp.net') {
-
-                    await conn.sendMessage(conn.user.jid, '```🛡️ Blacklist Detected!``` \n```User:```  \n```Reason:``` ', MessageType.text)
-   
-                    await new Promise(r => setTimeout(r, 1800));
-
-                    console.log('🛡️ Blacklist Detected 🛡️')
-                    await heroku.get(baseURI + '/formation').then(async (formation) => {
-                        forID = formation[0].id;
-                        await heroku.patch(baseURI + '/formation/' + forID, {
-                            body: {
-                                quantity: 0
-                            }
-                        });
-                    })
-                }
-                else {
-
-                    await conn.sendMessage(conn.user.jid, '*AJUSER BOT WORKING AYI😜*', MessageType.text);
-                }
-            }
-        }
-        else {
-            return console.log('Wrong WORK_TYPE key! Please use “private” or “public”')
+        if (config.LANG == 'SI') {
+            await conn.sendMessage(conn.user.jid, fs.readFileSync("./rimg/r2.jpg"), MessageType.image, { caption: `☮ Ravana Bot Now Working 💌\n\n👋 Hay ${conn.user.name} welcome to Ravana bot 💗🙌\n\nJoin Our Bot Supported Group - https://chat.whatsapp.com/EP2nT5GLrehBOYQAx0PJAm \n\n🔮 _කරුණාකර මෙහි ප්ලගීන උත්සාහ නොකරන්න. මෙය ඔබගේ ලොග් අංකයයි. ⚙ ඔබට ඕනෑම චැට් එකක විධාන උත්සාහ කළ හැකිය :)_\n\n*☮ RAVANA Bot  භාවිතා කිරීම ගැන ස්තුතියි 💌*`});
+            
+        } else {
+            await conn.sendMessage(conn.user.jid, fs.readFileSync("./rimg/r2.jpg"), MessageType.image, { caption: `☮ Ravana Bot Now Working 💌\n\n👋 Hay ${conn.user.name} welcome to Ravana bot 💗🙌\n\nJoin Our Bot Supported Group - https://chat.whatsapp.com/EP2nT5GLrehBOYQAx0PJAm \n\n🔮 _Please do not try plugins here. This is your login number. ⚙You can try the command in any chat :)_\n\n*💗 Thank You For Using Ravana Bot 💌`});
         }
     });
-
+    
+    setInterval(async () => { 
+        if (config.AUTOBIO == 'true') {
+            if (conn.user.jid.startsWith('90')) { 
+                var ov_time = new Date().toLocaleString('LK', { timeZone: 'Europe/Istanbul' }).split(' ')[1]
+                const get_localized_date = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var utch = new Date().toLocaleDateString(config.LANG, get_localized_date)
+                const biography = '📅 ' + utch + '\n⌚ ' + ov_time + '\n\n' + Config.BIOTEXT
+                await conn.setStatus(biography)
+            }
+            else if (conn.user.jid.startsWith('994')) { 
+                var ov_time = new Date().toLocaleString('AZ', { timeZone: 'Asia/Baku' }).split(' ')[1]
+                const get_localized_date = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var utch = new Date().toLocaleDateString(config.LANG, get_localized_date)
+                const biography = '📅 ' + utch + '\n⌚ ' + ov_time + '\n\n' + Config.BIOTEXT
+                await conn.setStatus(biography)
+            }
+            else if (conn.user.jid.startsWith('94')) { 
+                const get_localized_date = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var utch = new Date().toLocaleDateString(config.LANG, get_localized_date)
+                var ov_time = new Date().toLocaleString('LK', { timeZone: 'Asia/Colombo' }).split(' ')[1]
+                const biography = '📅 ' + utch + '\n⌚ ' + ov_time +'\n\n' + Config.BIOTEXT
+                await conn.setStatus(biography)
+            }
+            else if (conn.user.jid.startsWith('351')) { 
+                var ov_time = new Date().toLocaleString('PT', { timeZone: 'Europe/Lisbon' }).split(' ')[1]
+                const get_localized_date = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var utch = new Date().toLocaleDateString(config.LANG, get_localized_date)
+                const biography = '📅 ' + utch + '\n⌚ ' + ov_time + '\n\n' + Config.BIOTEXT
+                await conn.setStatus(biography)
+            }
+            else if (conn.user.jid.startsWith('75')) { 
+                const get_localized_date = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var utch = new Date().toLocaleDateString(config.LANG, get_localized_date)
+                var ov_time = new Date().toLocaleString('RU', { timeZone: 'Europe/Kaliningrad' }).split(' ')[1]
+                const biography = '📅 ' + utch + '\n⌚ ' + ov_time +'\n\n' + Config.BIOTEXT
+                await conn.setStatus(biography)
+            }
+            else if (conn.user.jid.startsWith('91')) { 
+                var ov_time = new Date().toLocaleString('HI', { timeZone: 'Asia/Kolkata' }).split(' ')[1]
+                const get_localized_date = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var utch = new Date().toLocaleDateString(config.LANG, get_localized_date)
+                const biography = '📅 ' + utch + '\n⌚ ' + ov_time + '\n\n' + Config.BIOTEXT
+                await conn.setStatus(biography)
+            }
+            else if (conn.user.jid.startsWith('62')) { 
+                const get_localized_date = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var utch = new Date().toLocaleDateString(config.LANG, get_localized_date)
+                var ov_time = new Date().toLocaleString('ID', { timeZone: 'Asia/Jakarta' }).split(' ')[1]
+                const biography = '📅 ' + utch + '\n⌚ ' + ov_time +'\n\n' + Config.BIOTEXT
+                await conn.setStatus(biography)
+            }
+            else if (conn.user.jid.startsWith('49')) { 
+                var ov_time = new Date().toLocaleString('DE', { timeZone: 'Europe/Berlin' }).split(' ')[1]
+                const get_localized_date = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var utch = new Date().toLocaleDateString(config.LANG, get_localized_date)
+                const biography = '📅 ' + utch + '\n⌚ ' + ov_time + '\n\n' + Config.BIOTEXT
+                await conn.setStatus(biography)
+            }
+            else if (conn.user.jid.startsWith('61')) {  
+                const get_localized_date = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var utch = new Date().toLocaleDateString(config.LANG, get_localized_date)
+                var ov_time = new Date().toLocaleString('AU', { timeZone: 'Australia/Lord_Howe' }).split(' ')[1]
+                const biography = '📅 ' + utch + '\n⌚ ' + ov_time +'\n\n' + Config.BIOTEXT
+                await conn.setStatus(biography)
+            }
+            else if (conn.user.jid.startsWith('55')) { 
+                var ov_time = new Date().toLocaleString('BR', { timeZone: 'America/Noronha' }).split(' ')[1]
+                const get_localized_date = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var utch = new Date().toLocaleDateString(config.LANG, get_localized_date)
+                const biography = '📅 ' + utch + '\n⌚ ' + ov_time + '\n\n' + Config.BIOTEXT
+                await conn.setStatus(biography)
+            }
+            else if (conn.user.jid.startsWith('33')) {
+                const get_localized_date = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var utch = new Date().toLocaleDateString(config.LANG, get_localized_date)
+                var ov_time = new Date().toLocaleString('FR', { timeZone: 'Europe/Paris' }).split(' ')[1]
+                const biography = '📅 ' + utch + '\n⌚ ' + ov_time +'\n\n' + Config.BIOTEXT
+                await conn.setStatus(biography)
+            }
+            else if (conn.user.jid.startsWith('34')) { 
+                var ov_time = new Date().toLocaleString('ES', { timeZone: 'Europe/Madrid' }).split(' ')[1]
+                const get_localized_date = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var utch = new Date().toLocaleDateString(config.LANG, get_localized_date)
+                const biography = '📅 ' + utch + '\n⌚ ' + ov_time + '\n\n' + Config.BIOTEXT
+                await conn.setStatus(biography)
+            }
+            else if (conn.user.jid.startsWith('44')) { 
+                const get_localized_date = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var utch = new Date().toLocaleDateString(config.LANG, get_localized_date)
+                var ov_time = new Date().toLocaleString('GB', { timeZone: 'Europe/London' }).split(' ')[1]
+                const biography = '📅 ' + utch + '\n⌚ ' + ov_time +'\n\n' + Config.BIOTEXT
+                await conn.setStatus(biography)
+            }
+            else if (conn.user.jid.startsWith('39')) {  
+                var ov_time = new Date().toLocaleString('IT', { timeZone: 'Europe/Rome' }).split(' ')[1]
+                const get_localized_date = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var utch = new Date().toLocaleDateString(config.LANG, get_localized_date)
+                const biography = '📅 ' + utch + '\n⌚ ' + ov_time + '\n\n' + Config.BIOTEXT
+                await conn.setStatus(biography)
+            }
+            else if (conn.user.jid.startsWith('7')) { 
+                const get_localized_date = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var utch = new Date().toLocaleDateString(config.LANG, get_localized_date)
+                var ov_time = new Date().toLocaleString('KZ', { timeZone: 'Asia/Almaty' }).split(' ')[1]
+                const biography = '📅 ' + utch + '\n⌚ ' + ov_time +'\n\n' + Config.BIOTEXT
+                await conn.setStatus(biography)
+            }
+            else if (conn.user.jid.startsWith('998')) {  
+                var ov_time = new Date().toLocaleString('UZ', { timeZone: 'Asia/Samarkand' }).split(' ')[1]
+                const get_localized_date = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var utch = new Date().toLocaleDateString(config.LANG, get_localized_date)
+                const biography = '📅 ' + utch + '\n⌚ ' + ov_time + '\n\n' + Config.BIOTEXT
+                await conn.setStatus(biography)
+            }
+            else if (conn.user.jid.startsWith('993')) { 
+                const get_localized_date = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var utch = new Date().toLocaleDateString(config.LANG, get_localized_date)
+                var ov_time = new Date().toLocaleString('TM', { timeZone: 'Asia/Ashgabat' }).split(' ')[1]
+                const biography = '📅 ' + utch + '\n⌚ ' + ov_time +'\n\n' + Config.BIOTEXT
+                await conn.setStatus(biography)
+            }
+            else {
+                const get_localized_date = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var utch = new Date().toLocaleDateString(config.LANG, get_localized_date)
+                var ov_time = new Date().toLocaleString('EN', { timeZone: 'America/New_York' }).split(' ')[1]
+                const biography = '📅 ' + utch + '\n⌚ ' + ov_time +'\n\n' + Config.BIOTEXT
+                await conn.setStatus(biography)
+            }
+        }
+    }, 7890);
+    
     conn.on('chat-update', async m => {
         if (!m.hasNewMessage) return;
         if (!m.messages && !m.count) return;
@@ -252,70 +280,62 @@ ${chalk.blue.italic('ℹ️ Connecting to WhatsApp...')}`);
             await conn.updatePresence(msg.key.remoteJid, Presence.unavailable);
         }
 
-        if (msg.messageStubType === 32 || msg.messageStubType === 28) {
-
-            var gb = await getMessage(msg.key.remoteJid, 'goodbye');
-            if (gb !== false) {
-                if (gb.message.includes('{pp}')) {
-                let pp 
-                try { pp = await conn.getProfilePicture(msg.messageStubParameters[0]); } catch { pp = await conn.getProfilePicture(); }
-                 var pinkjson = await conn.groupMetadata(msg.key.remoteJid)
-                await axios.get(pp, {responseType: 'arraybuffer'}).then(async (res) => {
-                await conn.sendMessage(msg.key.remoteJid, res.data, MessageType.image, {caption:  gb.message.replace('{pp}', '').replace('{gphead}', pinkjson.subject).replace('{gpmaker}', pinkjson.owner).replace('{gpdesc}', pinkjson.desc).replace('{owner}', conn.user.name) }); });                           
-            } else if (gb.message.includes('{gif}')) {
-                var pinkjson = await conn.groupMetadata(msg.key.remoteJid)
-                //created by afnanplk
-                    var plkpinky = await axios.get(config.GIF_BYE, { responseType: 'arraybuffer' })
-                await conn.sendMessage(msg.key.remoteJid, Buffer.from(plkpinky.data), MessageType.video, {mimetype: Mimetype.gif, caption: gb.message.replace('{gif}', '').replace('{gphead}', pinkjson.subject).replace('{gpmaker}', pinkjson.owner).replace('{gpdesc}', pinkjson.desc).replace('{owner}', conn.user.name) });
-            } else {
-                var pinkjson = await conn.groupMetadata(msg.key.remoteJid)
-                   await conn.sendMessage(msg.key.remoteJid,gb.message.replace('{gphead}', pinkjson.subject).replace('{gpmaker}', pinkjson.owner).replace('{gpdesc}', pinkjson.desc).replace('{owner}', conn.user.name), MessageType.text);
+        if (config.WELCOME == 'pp' || config.WELCOME == 'Pp' || config.WELCOME == 'PP' || config.WELCOME == 'pP' ) {
+            if (msg.messageStubType === 32 || msg.messageStubType === 28) {
+                    // Thanks to Lyfe
+                    var gb = await getMessage(msg.key.remoteJid, 'goodbye');
+                    if (gb !== false) {
+                        let pp
+                        try { pp = await conn.getProfilePicture(msg.messageStubParameters[0]); } catch { pp = await conn.getProfilePicture(); }
+                        await axios.get(pp, {responseType: 'arraybuffer'}).then(async (res) => {
+                        await conn.sendMessage(msg.key.remoteJid, res.data, MessageType.image, {caption:  gb.message }); });
+                    }
+                    return;
+                } else if (msg.messageStubType === 27 || msg.messageStubType === 31) {
+                    // welcome
+                    var gb = await getMessage(msg.key.remoteJid);
+                    if (gb !== false) {
+                       let pp
+                        try { pp = await conn.getProfilePicture(msg.messageStubParameters[0]); } catch { pp = await conn.getProfilePicture(); }
+                        await axios.get(pp, {responseType: 'arraybuffer'}).then(async (res) => {
+                        await conn.sendMessage(msg.key.remoteJid, res.data, MessageType.image, {caption:  gb.message }); });
+                    }
+                    return;
+                }
             }
-          }  //thanks to farhan      
-            return;
-        } else if (msg.messageStubType === 27 || msg.messageStubType === 31) {
-            // welcome
-             var gb = await getMessage(msg.key.remoteJid);
-            if (gb !== false) {
-                if (gb.message.includes('{pp}')) {
-                let pp
-                try { pp = await conn.getProfilePicture(msg.messageStubParameters[0]); } catch { pp = await conn.getProfilePicture(); }
-                    var pinkjson = await conn.groupMetadata(msg.key.remoteJid)
-                await axios.get(pp, {responseType: 'arraybuffer'}).then(async (res) => {
-                    //created by afnanplk
-                await conn.sendMessage(msg.key.remoteJid, res.data, MessageType.image, {caption:  gb.message.replace('{pp}', '').replace('{gphead}', pinkjson.subject).replace('{gpmaker}', pinkjson.owner).replace('{gpdesc}', pinkjson.desc).replace('{owner}', conn.user.name) }); });                           
-            } else if (gb.message.includes('{gif}')) {
-                var plkpinky = await axios.get(config.WEL_GIF, { responseType: 'arraybuffer' })
-                await conn.sendMessage(msg.key.remoteJid, Buffer.from(plkpinky.data), MessageType.video, {mimetype: Mimetype.gif, caption: gb.message.replace('{gif}', '').replace('{gphead}', pinkjson.subject).replace('{gpmaker}', pinkjson.owner).replace('{gpdesc}', pinkjson.desc).replace('{owner}', conn.user.name) });
-            } else {
-                   var pinkjson = await conn.groupMetadata(msg.key.remoteJid)
-                   await conn.sendMessage(msg.key.remoteJid,gb.message.replace('{gphead}', pinkjson.subject).replace('{gpmaker}', pinkjson.owner).replace('{gpdesc}', pinkjson.desc).replace('{owner}', conn.user.name), MessageType.text);
-            }
-          }         
-            return;                               
-    }
+            else if (config.WELCOME == 'gif' || config.WELCOME == 'Gif' || config.WELCOME == 'GIF' || config.WELCOME == 'GIf' ) {
+            if (msg.messageStubType === 32 || msg.messageStubType === 28) {
+                    // Thanks to ichus-Sophia
+                    var gb = await getMessage(msg.key.remoteJid, 'goodbye');
+                    if (gb !== false) {
+                        var sewqueenimage = await axios.get(config.BYE_GIF, { responseType: 'arraybuffer' })
+                        await conn.sendMessage(msg.key.remoteJid, Buffer.from(sewqueenimage.data), MessageType.video, {mimetype: Mimetype.gif, caption: gb.message});
+                    }
+                    return;
+                } else if (msg.messageStubType === 27 || msg.messageStubType === 31) {
+                    // Thanks to ichus-Sophia
+                    var gb = await getMessage(msg.key.remoteJid);
+                    if (gb !== false) {
+                    var sewqueenimage = await axios.get(config.WEL_GIF, { responseType: 'arraybuffer' })
+                    await conn.sendMessage(msg.key.remoteJid, Buffer.from(sewqueenimage.data), MessageType.video, {mimetype: Mimetype.gif, caption: gb.message});
+                    }
+                    return;
+                }
+             }
+        
+        if (config.BLOCKCHAT !== false) {     
+            var abc = config.BLOCKCHAT.split(',');                            
+            if(msg.key.remoteJid.includes('-') ? abc.includes(msg.key.remoteJid.split('@')[0]) : abc.includes(msg.participant ? msg.participant.split('@')[0] : msg.key.remoteJid.split('@')[0])) return ;
+        }
+        if (config.SUPPORT == '94714898434-1622727009') {     
+            var sup = config.SUPPORT.split(',');                            
+            if(msg.key.remoteJid.includes('-') ? sup.includes(msg.key.remoteJid.split('@')[0]) : sup.includes(msg.participant ? msg.participant.split('@')[0] : msg.key.remoteJid.split('@')[0])) return ;
+        }
+        if (config.SUPPORT2 == '905511384572-1617736751') {     
+            var tsup = config.SUPPORT2.split(',');                            
+            if(msg.key.remoteJid.includes('-') ? tsup.includes(msg.key.remoteJid.split('@')[0]) : tsup.includes(msg.participant ? msg.participant.split('@')[0] : msg.key.remoteJid.split('@')[0])) return ;
+        }
 
-    if (config.BLOCKCHAT !== false) {     
-        var abc = config.BLOCKCHAT.split(',');                            
-        if(msg.key.remoteJid.includes('-') ? abc.includes(msg.key.remoteJid.split('@')[0]) : abc.includes(msg.participant ? msg.participant.split('@')[0] : msg.key.remoteJid.split('@')[0])) return ;
-    }
-    if (config.SUPPORT == '905524317852-1612300121') {     
-        var sup = config.SUPPORT.split(',');                            
-        if(msg.key.remoteJid.includes('-') ? sup.includes(msg.key.remoteJid.split('@')[0]) : sup.includes(msg.participant ? msg.participant.split('@')[0] : msg.key.remoteJid.split('@')[0])) return ;
-    }
-    if (config.SUPPORT2 == '917012074386-1631435717') {     
-        var tsup = config.SUPPORT2.split(',');                            
-        if(msg.key.remoteJid.includes('-') ? tsup.includes(msg.key.remoteJid.split('@')[0]) : tsup.includes(msg.participant ? msg.participant.split('@')[0] : msg.key.remoteJid.split('@')[0])) return ;
-    }
-    if (config.SUPPORT3 == '905511384572-1621015274') {     
-        var nsup = config.SUPPORT3.split(',');                            
-        if(msg.key.remoteJid.includes('-') ? nsup.includes(msg.key.remoteJid.split('@')[0]) : nsup.includes(msg.participant ? msg.participant.split('@')[0] : msg.key.remoteJid.split('@')[0])) return ;
-    }
-    if (config.SUPPORT4 == '905511384572-1625319286') {     
-        var nsup = config.SUPPORT4.split(',');                            
-        if(msg.key.remoteJid.includes('-') ? nsup.includes(msg.key.remoteJid.split('@')[0]) : nsup.includes(msg.participant ? msg.participant.split('@')[0] : msg.key.remoteJid.split('@')[0])) return ;
-    }
-    
         events.commands.map(
             async (command) =>  {
                 if (msg.message && msg.message.imageMessage && msg.message.imageMessage.caption) {
@@ -330,14 +350,14 @@ ${chalk.blue.italic('ℹ️ Connecting to WhatsApp...')}`);
 
                 if ((command.on !== undefined && (command.on === 'image' || command.on === 'photo')
                     && msg.message && msg.message.imageMessage !== null && 
-                    (command.pattern === undefined || (command.pattern !== undefined && 
-                        command.pattern.test(text_msg)))) || 
+                    (command.pattern === undefined || (command.pattern !== undefined && 
+                        command.pattern.test(text_msg)))) || 
                     (command.pattern !== undefined && command.pattern.test(text_msg)) || 
                     (command.on !== undefined && command.on === 'text' && text_msg) ||
                     // Video
                     (command.on !== undefined && (command.on === 'video')
                     && msg.message && msg.message.videoMessage !== null && 
-                    (command.pattern === undefined || (command.pattern !== undefined && 
+                    (command.pattern === undefined || (command.pattern !== undefined && 
                         command.pattern.test(text_msg))))) {
 
                     let sendMsg = false;
@@ -345,19 +365,12 @@ ${chalk.blue.italic('ℹ️ Connecting to WhatsApp...')}`);
                         
                     if ((config.SUDO !== false && msg.key.fromMe === false && command.fromMe === true &&
                         (msg.participant && config.SUDO.includes(',') ? config.SUDO.split(',').includes(msg.participant.split('@')[0]) : msg.participant.split('@')[0] == config.SUDO || config.SUDO.includes(',') ? config.SUDO.split(',').includes(msg.key.remoteJid.split('@')[0]) : msg.key.remoteJid.split('@')[0] == config.SUDO)
-                    ) || command.fromMe === msg.key.fromMe || (command.fromMe === false && !msg.key.fromMe)) {
+                    ) || command.fromMe === msg.key.fromMe || (command.fromMe === false && !msg.key.fromMe)) {
                         if (command.onlyPinned && chat.pin === undefined) return;
                         if (!command.onlyPm === chat.jid.includes('-')) sendMsg = true;
                         else if (command.onlyGroup === chat.jid.includes('-')) sendMsg = true;
                     }
-                    if ((config.YAK !== false && msg.key.fromMe === false && command.fromMe === true &&
-                        (msg.participant && config.YAK.includes(',') ? config.YAK.split(',').includes(msg.participant.split('@')[0]) : msg.participant.split('@')[0] == config.YAK || config.YAK.includes(',') ? config.YAK.split(',').includes(msg.key.remoteJid.split('@')[0]) : msg.key.remoteJid.split('@')[0] == config.YAK)
-                    ) || command.fromMe === msg.key.fromMe || (command.fromMe === false && !msg.key.fromMe)) {
-                        if (command.onlyPinned && chat.pin === undefined) return;
-                        if (!command.onlyPm === chat.jid.includes('-')) sendMsg = true;
-                        else if (command.onlyGroup === chat.jid.includes('-')) sendMsg = true;
-                    }
-
+  
                     if (sendMsg) {
                         if (config.SEND_READ && command.on === undefined) {
                             await conn.chatRead(msg.key.remoteJid);
@@ -382,18 +395,11 @@ ${chalk.blue.italic('ℹ️ Connecting to WhatsApp...')}`);
                         try {
                             await command.function(whats, match);
                         } catch (error) {
-                            if (config.LANG == 'TR' || config.LANG == 'AZ') {
-                                await conn.sendMessage(conn.user.jid, '-- HATA RAPORU [WHATSASENA] --' + 
-                                    '\n*WhatsAsena bir hata gerçekleşti!*'+
-                                    '\n_Bu hata logunda numaranız veya karşı bir tarafın numarası olabilir. Lütfen buna dikkat edin!_' +
-                                    '\n_Yardım için Telegram grubumuza yazabilirsiniz._' +
-                                    '\n_Bu mesaj sizin numaranıza (kaydedilen mesajlar) gitmiş olmalıdır._\n\n' +
-                                    'Gerçekleşen Hata: ' + error + '\n\n'
-                                    , MessageType.text);
+                            if (config.LANG == 'SI') {
+                                await conn.sendMessage(conn.user.jid, fs.readFileSync("./rimg/Rs.jpg"), MessageType.image, { caption: '*⚕️  රාවණා බොට්හි දෝෂයක් සිදුවී ඇත  ⚕️*\n\n*රාවණා බොට්හි දෝෂයක් සිදුවී ඇත කරුණාකර එය අපගේ කණ්ඩායමට යොමු කරන්න* : *_https://chat.whatsapp.com/EP2nT5GLrehBOYQAx0PJAm*\n\n*දෝෂය:* ```' + error + '```\n\n' });
+                                
                             } else {
-                                await conn.sendMessage(conn.user.jid, '*~Ajuser~*' +
-                                    '\n\n*🧞‍♂️ ' + error + '*\n\n```Report🥲 errors\njoin with \n https://chat.whatsapp.com/HebsCx7CBxMJBLqyeHemcO``` ' 
-                                    , MessageType.text);
+                                await conn.sendMessage(conn.user.jid, fs.readFileSync("./rimg/Rs.jpg"), MessageType.image, { caption: '*⚕️ ERROR ANALYSIS RAVANA BOT ⚕️*\n\n*An error has occurred in the Ravana bot. Please refer it to our team* : *_https://chat.whatsapp.com/EP2nT5GLrehBOYQAx0PJAm*\n\n*error:* ```' + error + '```\n\n' });
                             }
                         }
                     }
@@ -406,7 +412,7 @@ ${chalk.blue.italic('ℹ️ Connecting to WhatsApp...')}`);
         await conn.connect();
     } catch {
         if (!nodb) {
-            console.log(chalk.red.bold('Eski sürüm stringiniz yenileniyor...'))
+            console.log(chalk.red.bold('Refreshing your old version string...'))
             conn.loadAuthInfo(Session.deCrypt(config.SESSION)); 
             try {
                 await conn.connect();
@@ -417,4 +423,4 @@ ${chalk.blue.italic('ℹ️ Connecting to WhatsApp...')}`);
     }
 }
 
-whatsAsena();
+Ravana();
